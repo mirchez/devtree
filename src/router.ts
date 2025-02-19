@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { createAccount, login } from "./handlers";
 import { body } from "express-validator";
+import { handleInputErrors } from "./middlewares/validation";
 //middleware
 const router = Router();
 
@@ -13,12 +14,15 @@ router.post(
   body("password")
     .isLength({ min: 8 })
     .withMessage("Not valid password, 8 characters is needed"),
+  handleInputErrors,
   createAccount
 );
 
-router.post('/auth/login',
-  body('email').isEmail().withMessage('Not valid email'),
-  body('password').notEmpty().withMessage('Not valid password'),
-  login)
+router.post(
+  "/auth/login",
+  body("email").isEmail().withMessage("Not valid email"),
+  body("password").notEmpty().withMessage("Not valid password"),
+  handleInputErrors,
+  login
+);
 export default router;
-

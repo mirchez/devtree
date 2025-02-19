@@ -1,19 +1,13 @@
 //pettition solvers
 import User from "../models/User"; //User is where the documents of users are store
 import type { Request, Response } from "express";
-import { hashPassword } from "../utils/auth";
+import { checkPassword, hashPassword } from "../utils/auth";
 import slugify from "slugify";
 import { validationResult } from "express-validator";
 
 export const createAccount = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
-  //middlewares errors handler
-  let errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    res.status(400).json({ error: errors.array() });
-    return;
-  }
   //sanitizing user email
   const userExists = await User.findOne({ email });
   if (userExists) {
@@ -42,17 +36,22 @@ export const createAccount = async (req: Request, res: Response) => {
 };
 
 export const login = async (req: Request, res: Response) => {
-  const {email, password} = req.body;
+  const { email, password } = req.body;
   //middleware handler
-  let errors = validationResult(req);
-  if(!errors.isEmpty()){
-    res.status(409).json({error: errors.array()})
-  }
-
   const user = await User.findOne({ email });
+  //checks if the email exists
   if (!user) {
     const error = new Error("user does not exits");
     res.status(404).json({ error: error.message });
     return;
   }
-}
+  //check password
+  const isPasswordCorrect = await checkPassword(password, user.password);
+  if (!isPasswordCorrect) {
+    const error = new Error("Incorrect Password");
+    res.status(401).json({ error: error.message });
+    return;
+  }
+
+  res.send("Authenticated");
+};
