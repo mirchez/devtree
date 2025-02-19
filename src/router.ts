@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createAccount } from "./handlers";
+import { createAccount, login } from "./handlers";
 import { body } from "express-validator";
 //middleware
 const router = Router();
@@ -15,7 +15,10 @@ router.post(
     .withMessage("Not valid password, 8 characters is needed"),
   createAccount
 );
+
+router.post('/auth/login',
+  body('email').isEmail().withMessage('Not valid email'),
+  body('password').notEmpty().withMessage('Not valid password'),
+  login)
 export default router;
 
-//mongo user: root
-//mongo pass: CAXSKAy7rxRowUh8

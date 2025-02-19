@@ -40,3 +40,19 @@ export const createAccount = async (req: Request, res: Response) => {
   //send answer
   res.status(201).send({ msg: "User created" });
 };
+
+export const login = async (req: Request, res: Response) => {
+  const {email, password} = req.body;
+  //middleware handler
+  let errors = validationResult(req);
+  if(!errors.isEmpty()){
+    res.status(409).json({error: errors.array()})
+  }
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    const error = new Error("user does not exits");
+    res.status(404).json({ error: error.message });
+    return;
+  }
+}
