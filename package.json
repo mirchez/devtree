@@ -12,7 +12,9 @@
   "author": "Miguel Miranda",
   "license": "ISC",
   "dependencies": {
+    "@types/express-serve-static-core": "^5.0.6",
     "@types/jsonwebtoken": "^9.0.9",
+    "D": "^1.0.0",
     "cloudinary": "^2.5.1",
     "colors": "^1.4.0",
     "cors": "^2.8.5",
