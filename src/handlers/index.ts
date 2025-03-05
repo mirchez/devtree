@@ -144,3 +144,20 @@ export const getUserByHandle = async (req: Request, res: Response) => {
     return;
   }
 };
+
+export const searchByHandle = async (req: Request, res: Response) => {
+  try {
+    const { handle } = req.body;
+    const userExist = await User.findOne({ handle });
+    if (userExist) {
+      const error = new Error(`${handle} is already taken`);
+      res.status(409).json({ error: error.message });
+      return;
+    }
+    res.send(`${handle} is aviable`);
+  } catch (e) {
+    const error = new Error("Error uploading the image");
+    res.status(500).json({ error: error });
+    return;
+  }
+};
