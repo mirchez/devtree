@@ -17,7 +17,7 @@ export const authentication = async (
 ) => {
   const bearer = req.headers.authorization;
   if (!bearer) {
-    const error = new Error("Not Autorizated");
+    const error = new Error("Not Bearer Autorizated");
     res.status(401).json({ error: error.message });
     return;
   }
@@ -25,7 +25,7 @@ export const authentication = async (
   const [, token] = bearer.split(" ");
 
   if (!token) {
-    const error = new Error("Not Autorizated");
+    const error = new Error("Not Valid Token");
     res.status(401).json({ error: error.message });
     return;
   }
